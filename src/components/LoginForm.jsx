@@ -3,9 +3,9 @@ import loginPNG from '../assets/login.jpg'
 const LoginForm = () => {
   return (
     <section className='min-h-screen flex items-center justify-center md:px-10'>
-      <div className='bg-gradient-to-br from-indigo-100/30 via-slate-200/70 to-slate-300 md:to-rose-200/70 flex rounded-2xl max-w-6xl p-5 shadow-lg items-stretch h-screen md:h-auto w-full md:w-auto '>
+      <div className='bg-gradient-to-br from-indigo-100/30 via-slate-200/70 to-slate-300 md:to-rose-200/70 flex rounded-2xl max-w-6xl md:p-5 shadow-lg items-stretch h-screen md:h-auto w-full md:w-auto'>
         {/* form container */}
-        <div className='w-full md:w-[45%] px-10 flex flex-col justify-center'>
+        <div className='w-full md:w-[45%] px-5 md:px-10 flex flex-col justify-center -translate-y-20 md:-translate-y-0'>
           <h2 className='font-bold text-2xl text-indigo-900/80 select-none'>
             Login
           </h2>
