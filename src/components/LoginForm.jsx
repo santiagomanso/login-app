@@ -6,8 +6,10 @@ const LoginForm = () => {
       <div className='bg-gradient-to-br from-indigo-100/30 via-slate-200/70 to-slate-300 md:to-rose-200/70 flex rounded-2xl max-w-6xl p-5 shadow-lg items-stretch'>
         {/* form container */}
         <div className='md:w-[45%] px-10'>
-          <h2 className='font-bold text-2xl text-indigo-900/80'>Login</h2>
-          <p className='mt-2 text-gray-500'>
+          <h2 className='font-bold text-2xl text-indigo-900/80 select-none'>
+            Login
+          </h2>
+          <p className='mt-2 text-gray-500 select-none'>
             If you are already a member, easily log in
           </p>
           <form className='flex flex-col gap-4 mt-6'>
