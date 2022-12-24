@@ -1,47 +1,99 @@
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import loginPNG from '../assets/login.jpg'
+import { UserAuth } from './context/AuthContext'
 
 const LoginForm = () => {
+  //states to control form
+  const [email, setEmail] = useState('') //initialized to guest account
+  const [password, setPassword] = useState('') //initialized to guest account
+  const [error, setError] = useState(null)
+
+  //extract signIn from context
+  const { signIn, user, signInAsGuest } = UserAuth()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    //redirects when successfull login to home page
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate, error])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await signIn(email, password)
+      navigate('/')
+    } catch (e) {
+      setError(e.message)
+      console.log(e.message)
+    }
+  }
+
+  //handle guest mandar como argumento signIn(guest@guest.com, superguest)
+  const handleGuest = (e) => {
+    e.preventDefault()
+    signIn('guest@guest.com', 'superguest')
+  }
+
   return (
     <section className='min-h-screen flex items-center justify-center md:px-10'>
-      <div className='bg-gradient-to-br from-indigo-100/30 via-slate-200/70 to-slate-300 md:to-rose-200/70 flex rounded-2xl max-w-6xl md:p-5 shadow-lg items-stretch h-screen md:h-auto w-full md:w-auto'>
+      <div className='bg-gradient-to-br from-indigo-100 via-slate-200/50 to-slate-400/80 md:to-sky-900/40 flex rounded-2xl max-w-6xl md:p-5 shadow-lg items-stretch h-screen md:h-auto w-full md:min-w-auto'>
         {/* form container */}
         <div className='w-full md:w-[45%] px-5 md:px-10 flex flex-col justify-center -translate-y-20 md:-translate-y-0'>
           <h2 className='font-bold text-2xl text-indigo-900/80 select-none'>
             Login
           </h2>
-          <p className='mt-2 text-gray-500 select-none'>
-            If you are already a member, easily log in
-          </p>
-          <form className='flex flex-col gap-4 mt-6'>
-            <input
-              className='p-2 rounded-lg border-2 border-opacity-50 outline-none focus:border-blue-500  transition duration-200'
-              type='email'
-              placeholder='Email'
-              name='email'
-            />
 
-            <div className='relative'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='22'
-                height='22'
-                fill='gray'
-                className='bi bi-eye absolute top-1/2 right-3 -translate-y-1/2'
-                viewBox='0 0 16 16'
-              >
-                <path d='M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z' />
-                <path d='M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z' />
-              </svg>
+          <form className='flex flex-col gap-2 mt-4'>
+            <label className='flex flex-col'>
+              <span>Email Adress</span>
               <input
-                className='w-full bg-white p-2 rounded-lg border-2 border-opacity-50 outline-none focus:border-blue-500  transition duration-200'
-                type='password'
-                name='password'
-                id=''
-                placeholder='password'
+                value={email}
+                className='p-2 rounded-lg border-2 border-opacity-50 outline-none focus:border-blue-500  transition duration-200'
+                type='email'
+                placeholder='Email'
+                name='email'
+                onChange={(e) => setEmail(e.target.value)}
+                onClick={() => setError(null)}
               />
-            </div>
-            <div className='flex items-stretch justify-between'>
-              <button className='w-[45%] shadow-md bg-gradient-to-br from-indigo-500/90 to-purple-500/80 text-white rounded-lg py-2 flex justify-center items-center gap-1 border font-semibold'>
+            </label>
+
+            <label>
+              <span>Password</span>
+              <div className='relative'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='22'
+                  height='22'
+                  fill='lightgray'
+                  className='bi bi-eye absolute top-1/2 right-3 -translate-y-1/2'
+                  viewBox='0 0 16 16'
+                >
+                  <path d='M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z' />
+                  <path d='M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z' />
+                </svg>
+                <input
+                  value={password}
+                  className='w-full bg-white p-2 rounded-lg border-2 border-opacity-50 outline-none focus:border-blue-500  transition duration-200'
+                  type='password'
+                  name='password'
+                  id=''
+                  placeholder='password'
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </label>
+            <h2 className='text-red-600 font-bold rounded-lg mt-1 animate-bounce'>
+              {error ? error : ''}
+            </h2>
+            <div className='flex items-stretch justify-between mt-4'>
+              <button
+                onClick={handleGuest}
+                className='w-[45%] shadow-md bg-gradient-to-br from-indigo-500/90 to-purple-500/80 text-white rounded-lg py-2 flex justify-center items-center gap-1 border font-semibold hover:scale-105 duration-300'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='25'
@@ -53,10 +105,13 @@ const LoginForm = () => {
                   <path d='M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z' />
                   <path d='M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0h-7zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492V2.5z' />
                 </svg>
-                <span className=' lg:hidden'>As guest</span>
-                <span className='hidden lg:block'>Log in as a Guest</span>
+                <span className=' lg:hidden'>Guest Account</span>
+                <span className='hidden lg:block'>Use guest account</span>
               </button>
-              <button className='w-[45%] shadow-md bg-gradient-to-br from-gray-300/90 to-slate-600/70 text-white tracking-wider py-2 rounded-md font-bold'>
+              <button
+                onClick={handleSubmit}
+                className='w-[45%] shadow-md bg-gradient-to-br from-gray-300/90 to-slate-600/70 text-white tracking-wider py-2 rounded-md font-bold hover:scale-105 duration-300'
+              >
                 Login
               </button>
             </div>
@@ -67,7 +122,7 @@ const LoginForm = () => {
             <hr className='border-gray-400' />
           </div>
 
-          <button className='shadow-md bg-white w-full rounded-lg py-2 mt-5 flex justify-center items-center gap-2 border text-gray-500 font-semibold'>
+          <button className='shadow-md bg-white w-full rounded-lg py-2 mt-5 flex justify-center items-center gap-2 border text-gray-500 font-semibold hover:scale-105 duration-300'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 48 48'
@@ -95,13 +150,22 @@ const LoginForm = () => {
           <div className='flex justify-between items-center mt-4 font-semibold text-gray-500'>
             <p className='md:hidden'>No account?</p>
             <p className='hidden md:block'>You don't have an account?</p>
-            <button className='py-2 px-10 select-none'>Register</button>
+            <Link
+              to='/register'
+              className='select-none cursor-pointer hover:scale-110 duration-500'
+            >
+              Register
+            </Link>
           </div>
         </div>
 
         {/* Image Container */}
         <div className='w-[55%] hidden md:block'>
-          <img src={loginPNG} alt='login' className='rounded-lg min-h-full' />
+          <img
+            src={loginPNG}
+            alt='login'
+            className='rounded-lg min-h-full z-0'
+          />
         </div>
       </div>
     </section>
